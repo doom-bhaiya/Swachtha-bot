@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+
+    <rosparam command="load"
+            file="$(find swachtha_bot)/config/velocity_controller.yaml"/>
+    <!-- <rosparam command="load"
+            file="$(find vehicle_environment)/config/gripper.yaml"/>
+    <rosparam command="load"
+            file="$(find vehicle_environment)/config/skid_steering.yaml"/> -->
+
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="joint_state_controller shutdown timeout 3"/> -->
+    <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner"
+        args="velocity_controller1 velocity_controller2 velocity_controller3 velocity_controller4 stepper_motor_controller servo_motor_controller1 servo_motor_controller2 servo_motor_controller3"/>
+    <!-- <node name="skid_controller_spawner" pkg="controller_manager" type="spawner"
+        args="skid_steering_controller shutdown timeout 3"/> -->
+
+</launch>

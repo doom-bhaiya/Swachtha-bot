@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find swachtha_bot)/urdf/bot.xacro'"/>
+
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+     <!-- <arg name="use_sim_time" value="true"/> -->
+    <!-- <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" /> -->
+
+    <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find swachtha_bot)/world/world.world"/>
+   
+   
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    </include> -->
+
+    <include file="$(find swachtha_bot)/launch/load.launch">
+    </include>
+    <node pkg="rostopic" type="rostopic" name="rostopic_pub_node" output="screen" 
+    args="pub Odom std_msgs/String 'data: Loaded controllers'" />
+
+    <include file="$(find robot_pose_ekf)/launch/ekf.launch">
+    </include>
+
+    <include file="$(find swachtha_bot)/launch/amcl.launch">
+    </include>
+
+    <include file="$(find gmapping)/launch/slam_gmapping_pr2.launch">
+    </include>
+
+    <include file="$(find rplidar_ros)/launch/rplidar_a1.launch">
+        
+    </include>
+
+     <!-- <param name="serial_port" value="/dev/ttyUSB1"/> -->
+
+
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/> -->
+    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
+    <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" /> -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <!-- <node name="spawner" pkg="gazebo_ros" type="spawn_model" output="screen"
+            args="-urdf -param robot_description -model swatchtha_bot -x $(arg x) -y $(arg y) -z $(arg z)"/> -->
+    <node name="Arduino_controller" pkg="arduino_controller" type="master_pi_controller" output="screen"/>
+    <node name="Odometry" pkg="swachtha_bot" type="odom.py" output="screen"/>
+    <node name="Oled" pkg="oled" type="oled_ros.py" output="screen"/>
+    <node name="imu" pkg="mpu_6050_driver" type="imu_node.py" output="screen"/>
+    <node name="initial_location" pkg="swachtha_bot" type="map.py" output="screen"/>
+<!-- 
+    <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner"
+        args="velocity_controller1 velocity_controller2 velocity_controller3 velocity_controller4"/> -->
+
+    <!-- <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+        <rosparam command="load" file="(find robot_localization)/config/ekf.yaml"/> -->
+
+
+    
+</launch>
